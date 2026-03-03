@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MegaStore Global - Analytics Dashboard</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+</head>
+
+<body>
+    <div class="glass-bg"></div>
+    <div class="container">
+        <header>
+            <div class="logo">
+                <h1>MegaStore <span>Global</span></h1>
+                <p>Modern Inventory Analytics</p>
+            </div>
+            <nav>
+                <button class="nav-btn active" data-tab="products">Inventory</button>
+                <button class="nav-btn" data-tab="suppliers">Suppliers</button>
+                <button class="nav-btn" data-tab="customers">Customers</button>
+                <button class="nav-btn" data-tab="bi">Insights</button>
+            </nav>
+            <div class="search-container">
+                <input type="text" id="global-search" placeholder="Search data...">
+            </div>
+        </header>
+
+        <main id="main-content">
+            <section id="products-section" class="tab-content active">
+                <div class="section-header">
+                    <h2>Live Inventory</h2>
+                    <span class="badge" id="product-count">0 Products</span>
+                </div>
+                <div class="table-container">
+                    <table id="products-table">
+                        <thead>
+                            <tr>
+                                <th>SKU</th>
+                                <th>Name</th>
+                                <th>Price</th>
+                                <th>Stock</th>
+                                <th>Category</th>
+                                <th>Supplier</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+            </section>
+
+            <section id="suppliers-section" class="tab-content">
+                <div class="section-header">
+                    <h2>Supplier Analysis</h2>
+                </div>
+                <div class="grid" id="suppliers-grid"></div>
+            </section>
+
+            <section id="customers-section" class="tab-content">
+                <div class="section-header">
+                    <h2>Customer Database</h2>
+                    <button class="action-btn" onclick="openModal('customer-modal')">+ New Customer</button>
+                </div>
+                <div class="customer-layout">
+                    <div class="customer-list-panel">
+                        <div id="customers-list-grid" class="grid-mini"></div>
+                    </div>
+                    <div class="customer-history-panel">
+                        <div id="history-container" class="hidden">
+                            <div class="history-header">
+                                <h3 id="current-customer-name">Order History</h3>
+                                <button class="action-btn" id="new-sale-btn" onclick="openSaleModal()">+ New
+                                    Sale</button>
+                            </div>
+                            <div class="table-container header-mini">
+                                <table id="history-table">
+                                    <thead>
+                                        <tr>
+                                            <th>Date</th>
+                                            <th>Product</th>
+                                            <th>Qty</th>
+                                            <th>Total</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody></tbody>
+                                </table>
+                            </div>
+                        </div>
+                        <div id="history-placeholder">
+                            <p>Select a customer to view their purchase history</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section id="bi-section" class="tab-content">
+                <div class="section-header">
+                    <h2>Star Products</h2>
+                </div>
+                <div class="insights-grid" id="star-products-grid"></div>
+            </section>
+        </main>
+    </div>
+
+    <div id="customer-modal" class="modal-overlay hidden" onclick="closeModalOverlay(event,'customer-modal')">
+        <div class="modal">
+            <h3>New Customer</h3>
+            <form id="customer-form" onsubmit="submitCustomer(event)">
+                <div class="form-group">
+                    <label>Full Name</label>
+                    <input type="text" id="c-name" placeholder="Ana García" required>
+                </div>
+                <div class="form-group">
+                    <label>Email</label>
+                    <input type="email" id="c-email" placeholder="ana@email.com" required>
+                </div>
+                <div class="form-group">
+                    <label>Address (optional)</label>
+                    <input type="text" id="c-address" placeholder="Calle 1 # 2-3">
+                </div>
+                <div class="form-actions">
+                    <button type="button" class="btn-secondary" onclick="closeModal('customer-modal')">Cancel</button>
+                    <button type="submit" class="btn-primary">Save Customer</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div id="sale-modal" class="modal-overlay hidden" onclick="closeModalOverlay(event,'sale-modal')">
+        <div class="modal modal-wide">
+            <h3>New Sale</h3>
+            <p id="sale-customer-label" style="color:var(--text-dim); margin-bottom:1rem;"></p>
+            <div id="cart-items"></div>
+            <div class="form-group" style="margin-top:1rem;">
+                <label>Add Product</label>
+                <div style="display:flex;gap:0.8rem;">
+                    <select id="sale-product-select" style="flex:2"></select>
+                    <input type="number" id="sale-qty" min="1" value="1"
+                        style="flex:0.5;background:var(--glass);border:1px solid var(--glass-border);padding:0.6rem;border-radius:8px;color:var(--text);">
+                    <button class="btn-primary" onclick="addToCart()">Add</button>
+                </div>
+            </div>
+            <div class="form-actions"
+                style="margin-top:1rem;border-top:1px solid var(--glass-border); padding-top:1rem;">
+                <span id="cart-total" style="font-size:1.1rem; font-weight:600; color:var(--primary);">Total: $0</span>
+                <button type="button" class="btn-secondary" onclick="closeModal('sale-modal')">Cancel</button>
+                <button type="button" class="btn-primary" onclick="submitSale()">Confirm Sale</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="notification" class="hidden"></div>
+    <script src="app.js"></script>
+</body>
+
+</html>
